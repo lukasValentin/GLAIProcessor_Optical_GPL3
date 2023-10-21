@@ -246,3 +246,4 @@ eodal.code-workspace
 
 data/*.tiff
 data/*.yaml
+data/*.pkl
