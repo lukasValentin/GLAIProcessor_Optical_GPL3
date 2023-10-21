@@ -66,8 +66,13 @@ def test_sentinel2():
     assert Path(
         'data/S2A_2022-06-13_B02-B03-B04-B08-SCL.tiff'
     ).exists()
+    # make sure the mapper configs were saved
     assert Path(
         'data/sentinel2-msi_2022-06-01-2022-06-15_mapper_configs.yaml'
+    ).exists()
+    # make sure the angles were saved
+    assert Path(
+        'data/S2A_2022-06-13_angles.yaml'
     ).exists()
 
     # TODO: use rio_cog to check if GeoTiff is a valid COG
@@ -113,12 +118,14 @@ def test_landsat():
 
     # make sure a GeoTiff was created
     assert Path(
-        'data/S2A_2022-06-13_B02-B03-B04-B08-SCL.tiff'
+        'data/LANDSAT_9_2022-06-06_blue-green-red-nir08-qa_pixel-qa_aerosol-qa_radsat-qa.tiff'  # noqa E501
     ).exists()
     assert Path(
-        'data/sentinel2-msi_2022-06-01-2022-06-15_mapper_configs.yaml'
+        'data/landsat-c2-l2_2022-06-01-2022-06-15_mapper_configs.yaml'
     ).exists()
-
+    assert Path(
+        'data/LANDSAT_9_2022-06-06_angles.yaml'
+    ).exists()
     # TODO: use rio_cog to check if GeoTiff is a valid COG
 
 
