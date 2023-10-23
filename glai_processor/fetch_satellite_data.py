@@ -88,7 +88,9 @@ def fetch_data(
         band_selection: list[str] = ['red', 'green', 'blue', 'nir_1']
 ) -> None:
     """
-    Fetch satellite data from STAC API.
+    Fetch satellite data from STAC API. Each scene is stored
+    as a cloud-optimized GeoTIFF alongside the scene angles
+    as yaml file.
 
     Parameters
     ----------
@@ -96,6 +98,10 @@ def fetch_data(
         MapperConfigs object.
     output_dir : Path
         Output directory to save data to.
+    scene_kwargs: dict
+        kwargs for reading the scene into EOdal
+    :band_selection:
+        name of the spectral bands to fetch
     """
     # query the scenes available (no I/O of scenes, this only fetches metadata)
     mapper = Mapper(mapper_configs)
