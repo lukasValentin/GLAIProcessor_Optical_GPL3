@@ -68,6 +68,10 @@ def load_angles(
 
 if __name__ == '__main__':
 
+    import os
+    cwd = Path(__file__).parent.absolute()
+    os.chdir(cwd.parent)
+
     # TODO: make more generic and include landsat
 
     # define the angle yaml file

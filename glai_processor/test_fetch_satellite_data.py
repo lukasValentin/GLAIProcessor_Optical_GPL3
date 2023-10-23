@@ -131,5 +131,9 @@ def test_landsat():
 
 if __name__ == '__main__':
 
-    test_landsat()
+    import os
+    cwd = Path(__file__).parent.absolute()
+    os.chdir(cwd.parent)
+
+    # test_landsat()
     test_sentinel2()
