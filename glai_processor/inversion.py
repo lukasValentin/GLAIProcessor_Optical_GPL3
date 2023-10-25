@@ -54,12 +54,26 @@ def invert(
             f'{band_selection_lut} not found in {fpath_lut}')
 
     # get the satellite spectral data as numpy array
-    srf = RasterCollection.from_multi_band_raster(fpath_srf, nodata=0)
+    srf = RasterCollection.from_multi_band_raster(fpath_srf)
     # get GeoInfo of the first selected band for writing the output
     geo_info=srf[band_selection_srf[0]].geo_info
 
+    # get the nodata value to allow proper masking
+    # in the inversion process
+    nodata = srf[srf.band_names[0]].nodata
+
     # scale data to correct physical units
-    srf.scale(inplace=True)
+    srf.scale(
+        pixel_values_to_ignore=[nodata],  # important to ignore nodata!
+        inplace=True)
+
+    # mask nodata pixels. For nodata pixels, the inversion
+    # makes no sense.
+    srf.mask(
+        mask=srf.band_names[0],
+        mask_values=nodata,
+        inplace=True
+    )
 
     # get reflectance values as numpy ndarray
     try:
@@ -76,6 +90,9 @@ def invert(
     else:
         mask = np.zeros(shape=(srf.shape[1], srf.shape[2]), dtype='uint8')
         mask = mask.astype('bool')
+
+    # make sure the mask also captures all nodata pixels
+    mask[srf[0, :, :] == nodata] = True
 
     # get the spectral values from the lookup-table
     lut_spectra = lut[band_selection_lut].values
@@ -101,6 +118,8 @@ def invert(
     # save traits to file
     trait_collection = RasterCollection()
     for tdx, trait in enumerate(traits):
+        # TODO: We should also scale the traits to UINT16 to save
+        # disk space
         trait_collection.add_band(
             Band,
             geo_info=geo_info,
