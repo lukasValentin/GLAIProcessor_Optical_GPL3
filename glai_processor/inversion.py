@@ -19,7 +19,7 @@ def invert(
         band_selection_lut: list[str],
         band_selection_srf: list[str],
         traits: list[str],
-        n_solutions: int = 1,
+        n_solutions: int = 500,
         cost_function: str = 'rmse'
 ) -> None:
     """
@@ -133,12 +133,12 @@ def invert(
 
 if __name__ == '__main__':
 
-    data_dir = Path('GLAIProcessor_Optical_GPL3/data')
+    data_dir = Path('data')
     fpath_lut = data_dir.joinpath('S2A_2022-06-13_lut.pkl')
-    fpath_srf = data_dir.joinpath('S2A_2022-06-13_B02-B03-B04-B08-SCL.tiff')
+    fpath_srf = data_dir.joinpath('S2A_2022-06-13_blue-green-red-nir_1.tiff')
     traits = ['lai', 'cab']
     band_selection_lut = ['B02', 'B03', 'B04', 'B08']
-    band_selection_srf = ['B02', 'B03', 'B04', 'B08']
+    band_selection_srf = ['blue', 'red', 'green', 'nir_1']
     invert(
         fpath_lut=fpath_lut,
         fpath_srf=fpath_srf,
