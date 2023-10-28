@@ -30,7 +30,7 @@ pip install glai-processor
 Testing the package is done using [pytest](https://docs.pytest.org/en/7.4.x/). Run the following command in a terminal in the root of the repository:
 
 ```bash
-pytest glai_processor/tests.py
+python -m pytest tests
 ```
 
 ## License:
