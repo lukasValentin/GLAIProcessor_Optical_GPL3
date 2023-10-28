@@ -4,7 +4,7 @@ This software enables the retrieval of bio-physical and bio-chemical plant trait
 
 The default setting of the package uses RTM inputs tailored to [winter wheat](https://en.wikipedia.org/wiki/Winter_wheat) in the [stem elongation period](http://corn.agronomy.wisc.edu/Crops/Wheat/L007.aspx) (BBCH growth stages 30 to 59) using calibration data from field phenotyping as described in [our peer-reviewed scientific article](https://doi.org/10.1016/j.rse.2023.113860).
 
-This software is an improved version of the original source code for the paper of [Graf et al. (2023, RSE)](https://doi.org/10.1016/j.rse.2023.113860) available [GNU GENERAL PUBLIC LICENSE Version 3](/LICENSE) made available by [Terensis](https://ethz.ch/en/industry/entrepreneurship/find-offers-programs-space-grants-for-entrepreneurs/pioneer-fellowship/2023/terensis.html). See [here](https://github.com:EOA-team/sentinel2_crop_traits) for the original source code by [Lukas Valentin Graf](https://github.com/lukasValentin).
+This software is an improved version of the original source code for the paper of [Graf et al. (2023, RSE)](https://doi.org/10.1016/j.rse.2023.113860) available [GNU GENERAL PUBLIC LICENSE Version 3](/LICENSE) made available by [Terensis](https://ethz.ch/en/industry/entrepreneurship/find-offers-programs-space-grants-for-entrepreneurs/pioneer-fellowship/2023/terensis.html). See [here](https://github.com/EOA-team/sentinel2_crop_traits) for the original source code by [Lukas Valentin Graf](https://github.com/lukasValentin).
 
 ## Installation
 
