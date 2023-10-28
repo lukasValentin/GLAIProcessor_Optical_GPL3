@@ -17,7 +17,7 @@ FPATH_SRF = \
 RTM_PARAMS = \
     f'{BASE_URL}/src/lut_params/prosail_danner-etal_stemelongation-endofheading.csv'  # noqa E501
 
-LUT_SIZE = 100
+LUT_SIZE = 20000
 SAMPLING_METHOD = 'frs'
 
 PLATFORMS = {'S2A': 'Sentinel2A', 'S2B': 'Sentinel2B'}
@@ -68,6 +68,10 @@ def load_angles(
 
 if __name__ == '__main__':
 
+    import os
+    cwd = Path(__file__).parent.absolute()
+    os.chdir(cwd.parent)
+
     # TODO: make more generic and include landsat
 
     # define the angle yaml file
@@ -75,10 +79,8 @@ if __name__ == '__main__':
     # load the angles
     angles = load_angles(fpath_angles)
 
-    # GeoTiff file containing the spectral values
-    fpath_srf = Path('data/S2A_2022-06-13_B02-B03-B04-B08-SCL.tiff')
     # get the platform from the file name
-    platform = PLATFORMS[fpath_srf.name.split('_')[0]]
+    platform = PLATFORMS[fpath_angles.name.split('_')[0]]
 
     # generate the lookup-tables using the methodology from
     # Graf et al. (2023, RSE, https://doi.org/10.1016/j.rse.2023.113860)

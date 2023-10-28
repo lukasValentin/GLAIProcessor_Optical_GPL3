@@ -35,12 +35,12 @@ def test_sentinel2():
         Filter('cloudy_pixel_percentage', '<', 50),
         Filter('processing_level', '==', 'Level-2A')
     ]
-    band_selection = ['B02', 'B03', 'B04', 'B08']
+    band_selection = ['blue', 'green', 'red', 'nir_1']
 
     # define the scene kwargs
     scene_kwargs = {
         'scene_constructor': Sentinel2.from_safe,
-        'scene_constructor_kwargs': {'band_selection': band_selection,
+        'scene_constructor_kwargs': {'band_selection': band_selection.copy(),
                                      'apply_scaling': False,
                                      'read_scl': True},
         'scene_modifier': preprocess_sentinel2_scene,
@@ -64,7 +64,7 @@ def test_sentinel2():
 
     # make sure a GeoTiff was created
     assert Path(
-        'data/S2A_2022-06-13_B02-B03-B04-B08-SCL.tiff'
+        'data/S2A_2022-06-13_blue-green-red-nir_1.tiff'
     ).exists()
     # make sure the mapper configs were saved
     assert Path(
@@ -96,7 +96,7 @@ def test_landsat():
     # define the scene kwargs
     scene_kwargs = {
         'scene_constructor': Landsat.from_usgs,
-        'scene_constructor_kwargs': {'band_selection': band_selection,
+        'scene_constructor_kwargs': {'band_selection': band_selection.copy(),
                                      'read_qa': True},
         'scene_modifier': preprocess_landsat_scene
     }
@@ -118,7 +118,7 @@ def test_landsat():
 
     # make sure a GeoTiff was created
     assert Path(
-        'data/LANDSAT_9_2022-06-06_blue-green-red-nir08-qa_pixel-qa_aerosol-qa_radsat-qa.tiff'  # noqa E501
+        'data/LANDSAT_9_2022-06-06_blue-green-red-nir08.tiff'  # noqa E501
     ).exists()
     assert Path(
         'data/landsat-c2-l2_2022-06-01-2022-06-15_mapper_configs.yaml'
@@ -131,5 +131,9 @@ def test_landsat():
 
 if __name__ == '__main__':
 
-    test_landsat()
+    import os
+    cwd = Path(__file__).parent.absolute()
+    os.chdir(cwd.parent)
+
+    # test_landsat()
     test_sentinel2()

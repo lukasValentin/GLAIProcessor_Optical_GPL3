@@ -19,7 +19,7 @@ def invert(
         band_selection_lut: list[str],
         band_selection_srf: list[str],
         traits: list[str],
-        n_solutions: int = 1,
+        n_solutions: int = 500,
         cost_function: str = 'rmse'
 ) -> None:
     """
@@ -49,11 +49,39 @@ def invert(
 
     # read the lookup-table
     lut = pd.read_pickle(fpath_lut)
+    if not set(band_selection_lut).issubset(lut.columns):
+        raise KeyError(
+            f'{band_selection_lut} not found in {fpath_lut}')
 
     # get the satellite spectral data as numpy array
-    srf = RasterCollection.from_multiband_raster(fpath_srf)
-    srf.scale_values(inplace=True)
-    srf = srf.get_values(band_selection=band_selection_srf)
+    srf = RasterCollection.from_multi_band_raster(fpath_srf)
+    # get GeoInfo of the first selected band for writing the output
+    geo_info=srf[band_selection_srf[0]].geo_info
+
+    # get the nodata value to allow proper masking
+    # in the inversion process
+    nodata = srf[srf.band_names[0]].nodata
+
+    # scale data to correct physical units
+    srf.scale(
+        pixel_values_to_ignore=[nodata],  # important to ignore nodata!
+        inplace=True)
+
+    # mask nodata pixels. For nodata pixels, the inversion
+    # makes no sense.
+    srf.mask(
+        mask=srf.band_names[0],
+        mask_values=nodata,
+        inplace=True
+    )
+
+    # get reflectance values as numpy ndarray
+    try:
+        srf = srf.get_values(
+            band_selection=band_selection_srf)
+    except Exception as e:
+        raise KeyError from e
+
 
     # check if the satellite data is masked
     if isinstance(srf, np.ma.MaskedArray):
@@ -61,7 +89,10 @@ def invert(
         srf = srf.data
     else:
         mask = np.zeros(shape=(srf.shape[1], srf.shape[2]), dtype='uint8')
-        mask = mask.as_type('bool')
+        mask = mask.astype('bool')
+
+    # make sure the mask also captures all nodata pixels
+    mask[srf[0, :, :] == nodata] = True
 
     # get the spectral values from the lookup-table
     lut_spectra = lut[band_selection_lut].values
@@ -74,6 +105,7 @@ def invert(
         cost_function=cost_function,
         n_solutions=n_solutions,
     )
+    # debug: nodata handling makes no sense
     trait_img = retrieve_traits(
         lut=lut,
         lut_idxs=lut_idxs,
@@ -81,15 +113,37 @@ def invert(
         cost_function_values=cost_function_values,
         measure='median'
     )
+    trait_img = trait_img[0]
 
     # save traits to file
     trait_collection = RasterCollection()
     for tdx, trait in enumerate(traits):
+        # TODO: We should also scale the traits to UINT16 to save
+        # disk space
         trait_collection.add_band(
             Band,
-            geo_info=srf[band_selection_srf[0]].geo_info,
+            geo_info=geo_info,
             band_name=trait,
-            values=trait_img[tdx, :, :]
+            values=trait_img[tdx, :, :],
+            nodata=0
         )
     fpath_traits = output_dir / fpath_srf.name.replace('.tiff', '_traits.tiff')
     trait_collection.to_rasterio(fpath_traits, as_cog=True)
+
+
+if __name__ == '__main__':
+
+    data_dir = Path('data')
+    fpath_lut = data_dir.joinpath('S2A_2022-06-13_lut.pkl')
+    fpath_srf = data_dir.joinpath('S2A_2022-06-13_blue-green-red-nir_1.tiff')
+    traits = ['lai', 'cab']
+    band_selection_lut = ['B02', 'B03', 'B04', 'B08']
+    band_selection_srf = ['blue', 'red', 'green', 'nir_1']
+    invert(
+        fpath_lut=fpath_lut,
+        fpath_srf=fpath_srf,
+        output_dir=data_dir,
+        band_selection_lut=band_selection_lut,
+        band_selection_srf=band_selection_srf,
+        traits=traits
+    )
