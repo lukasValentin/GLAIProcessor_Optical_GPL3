@@ -26,12 +26,9 @@ import urllib.request
 import yaml
 
 from pathlib import Path
-from datetime import datetime
 
 from eodal.core.sensors import Sentinel2
 from eodal.core.sensors import Landsat
-from eodal.mapper.filter import Filter
-from eodal.mapper.feature import Feature
 from eodal.mapper.mapper import Mapper, MapperConfigs
 from eodal.metadata.sentinel2.parsing import parse_MTD_TL
 

@@ -36,4 +36,12 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        pytest glai_processor/tests.py
+        python -m pip install pytest
+        python -m pip install pytest-cov
+        python -m pytest --cov=glai_processor --cov-report term --cov-report xml --cov-config .coveragerc --junitxml=testresults.xml
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        flags: unittests
+        env_vars: OS,PYTHON
+        name: Python 3.10 on ubuntu-latest

@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from glai_processor.fetch_satellite_data import fetch_satellite_data
+from glai_processor.fetch_satellite_data import fetch_data
 from glai_processor.inversion import invert
 from glai_processor.utils import (
     get_required_angles,
@@ -42,3 +42,5 @@ __all__ = [
 ]
 
 # TODO: add a function to run the full pipeline
+def run():
+    pass
