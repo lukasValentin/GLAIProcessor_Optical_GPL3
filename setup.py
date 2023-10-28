@@ -9,8 +9,8 @@ setup(
     packages=find_packages(),
     install_requires=[
         'rio-cogeo',
-        'git+https://github.com/EOA-team/eodal',
-        'git+https://github.com/EOA-team/rtm_inv',
+        'eodal @ git+https://github.com/EOA-team/eodal',
+        'rtm_inv @ git+https://github.com/EOA-team/rtm_inv',
     ],
     classifiers=[
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
