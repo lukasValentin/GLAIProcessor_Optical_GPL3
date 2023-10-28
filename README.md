@@ -1,3 +1,6 @@
+![Tests](https://github.com/lukasValentin/GLAIProcessor_Optical_GPL3/actions/workflows/python-app.yml/badge.svg)
+[![codecov](https://codecov.io/gh/lukasValentin/GLAIProcessor_Optical_GPL3/graph/badge.svg?token=VFfwEUJmZT)](https://codecov.io/gh/lukasValentin/GLAIProcessor_Optical_GPL3)
+
 # Green Leaf Area Index Retrieval from Optical Data (and other traits)
 
 This software enables the retrieval of bio-physical and bio-chemical plant traits from optical remote sensing data by inverting the [PROSAIL](http://teledetection.ipgp.jussieu.fr/prosail/) radiative transfer model (RTM). The main focus is on the [Green Leaf Area Index](https://www.sciencedirect.com/topics/agricultural-and-biological-sciences/leaf-area-index), which is among the most important functional canopy traits describing the accumulation of photosynthetically active biomass and, thus, the area available for material and energy fluxes between plants and the atmosphere.
