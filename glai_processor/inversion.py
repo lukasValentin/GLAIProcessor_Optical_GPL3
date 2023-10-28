@@ -1,6 +1,21 @@
 """
 Invert the RTM to get the canopy parameters from the reflectance
 values.
+
+Copyright (C) 2023 Lukas Valentin Graf (lukas.graf@terensis.io)
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import numpy as np
@@ -19,7 +34,7 @@ def invert(
         band_selection_lut: list[str],
         band_selection_srf: list[str],
         traits: list[str],
-        n_solutions: int = 500,
+        n_solutions: int = 10,
         cost_function: str = 'rmse'
 ) -> None:
     """
@@ -40,9 +55,10 @@ def invert(
     :param traits:
         list of trait names to be retrieved from the lookup-table
     :param n_solutions:
-        number of solutions to be retrieved from the lookup-table
+        number of solutions to be retrieved from the lookup-table.
+        Default: 10.
     :param cost_function:
-        cost function to be used for the inversion
+        cost function to be used for the inversion. Default: 'rmse'.
     """
     # make sure the two band selections have the same length
     assert len(band_selection_lut) == len(band_selection_srf)
@@ -56,7 +72,7 @@ def invert(
     # get the satellite spectral data as numpy array
     srf = RasterCollection.from_multi_band_raster(fpath_srf)
     # get GeoInfo of the first selected band for writing the output
-    geo_info=srf[band_selection_srf[0]].geo_info
+    geo_info = srf[band_selection_srf[0]].geo_info
 
     # get the nodata value to allow proper masking
     # in the inversion process
@@ -81,7 +97,6 @@ def invert(
             band_selection=band_selection_srf)
     except Exception as e:
         raise KeyError from e
-
 
     # check if the satellite data is masked
     if isinstance(srf, np.ma.MaskedArray):
@@ -129,21 +144,3 @@ def invert(
         )
     fpath_traits = output_dir / fpath_srf.name.replace('.tiff', '_traits.tiff')
     trait_collection.to_rasterio(fpath_traits, as_cog=True)
-
-
-if __name__ == '__main__':
-
-    data_dir = Path('data')
-    fpath_lut = data_dir.joinpath('S2A_2022-06-13_lut.pkl')
-    fpath_srf = data_dir.joinpath('S2A_2022-06-13_blue-green-red-nir_1.tiff')
-    traits = ['lai', 'cab']
-    band_selection_lut = ['B02', 'B03', 'B04', 'B08']
-    band_selection_srf = ['blue', 'red', 'green', 'nir_1']
-    invert(
-        fpath_lut=fpath_lut,
-        fpath_srf=fpath_srf,
-        output_dir=data_dir,
-        band_selection_lut=band_selection_lut,
-        band_selection_srf=band_selection_srf,
-        traits=traits
-    )
