@@ -8,8 +8,8 @@ setup(
     author_email='lukas.graf@terensis.io',
     packages=find_packages(),
     install_requires=[
-        'rio-cog',
-        'eodal',
+        'rio-cogeo',
+        'git+https://github.com/EOA-team/eodal',
         'git+https://github.com/EOA-team/rtm_inv',
     ],
     classifiers=[
