@@ -1,5 +1,5 @@
-![Tests](https://github.com/lukasValentin/GLAIProcessor_Optical_GPL3/actions/workflows/python-app.yml/badge.svg)
-[![codecov](https://codecov.io/gh/lukasValentin/GLAIProcessor_Optical_GPL3/graph/badge.svg?token=VFfwEUJmZT)](https://codecov.io/gh/lukasValentin/GLAIProcessor_Optical_GPL3)
+![Tests](https://github.com/terensis/GLAIProcessor_Optical_GPL3/actions/workflows/python-app.yml/badge.svg)
+[![codecov](https://codecov.io/gh/terensis/GLAIProcessor_Optical_GPL3/graph/badge.svg?token=VFfwEUJmZT)](https://codecov.io/gh/terensis/GLAIProcessor_Optical_GPL3)
 
 # Green Leaf Area Index Retrieval from Optical Data (and other traits)
 
