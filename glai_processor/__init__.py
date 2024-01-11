@@ -143,7 +143,8 @@ def run_rtm(
             platform = PLATFORMS[fpath_sat_data.name.split('_')[0]]
 
             # generate the lookup-tables using the methodology from
-            # Graf et al. (2023, RSE, https://doi.org/10.1016/j.rse.2023.113860)
+            # Graf et al. (2023, RSE,
+            # https://doi.org/10.1016/j.rse.2023.113860)
             lut_srf = generate_lut(
                 sensor=platform,
                 lut_params=pd.read_csv(rtm_params),
@@ -228,7 +229,8 @@ def monitor_folder(
         return
     elif time_start_internal > time_end:
         logger.info(
-            f"Start date {time_start_internal.date()} is beyond end date. Exiting.")
+            f'Start date {time_start_internal.date()} is beyond end date. ' +
+            'Exiting.')
         return
 
     # the end time for the next query will be the time stamp of the
