@@ -18,24 +18,33 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import pandas as pd
-
+from datetime import datetime, timedelta
 from pathlib import Path
-from rtm_inv.core.lookup_table import generate_lut
 
-
-# DEFINE THE URLS TO THE REQUIRED DATA
-BASE_URL = \
-    'https://raw.githubusercontent.com/EOA-team/sentinel2_crop_trait_timeseries/main'  # noqa E501
-FPATH_SRF = \
-    f'{BASE_URL}/data/auxiliary/S2-SRF_COPE-GSEG-EOPG-TN-15-0007_3.1.xlsx'
-RTM_PARAMS = \
-    f'{BASE_URL}/src/lut_params/prosail_danner-etal_stemelongation-endofheading.csv'  # noqa E501
-
-LUT_SIZE = 20000
-SAMPLING_METHOD = 'frs'
 
 PLATFORMS = {'S2A': 'Sentinel2A', 'S2B': 'Sentinel2B'}
+
+
+def get_latest_scene(output_dir: Path, start_time: datetime) -> datetime:
+    """
+    Get the timestamp of the latest scene from a
+    file called `latest_scene`. If this file does
+    not exist use the default date
+
+    :param output_dir:
+        directory where scenes are stored (in sub-directories)
+    :param constants:
+        constants object
+    """
+    fpath_latest_scene = output_dir.joinpath('latest_scene')
+    if fpath_latest_scene.exists():
+        with open(output_dir.joinpath('latest_scene'), 'r') as f:
+            timestamp_raw = f.read()
+        timestamp_raw = timestamp_raw.replace('\n', '')
+        timestamp = datetime.strptime(timestamp_raw, '%Y-%m-%d')
+    else:
+        timestamp = start_time - timedelta(days=1)
+    return timestamp
 
 
 def get_required_angles(
@@ -62,6 +71,22 @@ def get_required_angles(
     return required_angles
 
 
+def indicate_complete(output_dir_scene: Path) -> None:
+    """
+    Indicate that a scene was extracted and post-
+    processed complete by writing a file named
+    "complete" to the scene sub-directory.
+
+    :param output_dir_scene:
+        output directory of the scene.
+    """
+    fpath_complete = output_dir_scene.joinpath(
+        'complete.txt'
+    )
+    with open(fpath_complete, 'w') as f:
+        f.write('complete')
+
+
 def load_angles(
         fpath_angles: Path
 ) -> dict[str, float]:
@@ -81,39 +106,21 @@ def load_angles(
     return get_required_angles(angles)
 
 
-if __name__ == '__main__':
+def set_latest_scene(
+        output_dir: Path,
+        timestamp: datetime
+) -> None:
+    """
+    Set the timestamp of the latest scene
+    to a file called `latest_scene`.
 
-    import os
-    cwd = Path(__file__).parent.absolute()
-    os.chdir(cwd.parent)
-
-    # TODO: make more generic and include landsat
-
-    # define the angle yaml file
-    fpath_angles = Path('data/S2A_2022-06-13_angles.yaml')
-    # load the angles
-    angles = load_angles(fpath_angles)
-
-    # get the platform from the file name
-    platform = PLATFORMS[fpath_angles.name.split('_')[0]]
-
-    # generate the lookup-tables using the methodology from
-    # Graf et al. (2023, RSE, https://doi.org/10.1016/j.rse.2023.113860)
-    lut_srf = generate_lut(
-        sensor=platform,
-        lut_params=pd.read_csv(RTM_PARAMS),
-        solar_zenith_angle=angles['solar_zenith_angle'],
-        viewing_zenith_angle=angles['viewing_zenith_angle'],
-        solar_azimuth_angle=angles['solar_azimuth_angle'],
-        viewing_azimuth_angle=angles['viewing_azimuth_angle'],
-        lut_size=LUT_SIZE,
-        sampling_method=SAMPLING_METHOD,
-        fpath_srf=FPATH_SRF,
-        remove_invalid_green_peaks=True,
-        linearize_lai=False
-    )
-
-    # save the lookup-tables
-    lut_srf.dropna(inplace=True)
-    fpath_lut = Path('data/S2A_2022-06-13_lut.pkl')
-    lut_srf.to_pickle(fpath_lut)
+    :param output_dir:
+        directory where scenes are stored (in sub-directories)
+    :param timestamp:
+        time stamp of the latest scene
+    """
+    # make sure the latest scene is never in the future
+    if timestamp > datetime.now():
+        timestamp = datetime.now()
+    with open(output_dir.joinpath('latest_scene'), 'w+') as f:
+        f.write(f'{timestamp.date()}')
