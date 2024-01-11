@@ -26,9 +26,6 @@ import urllib.request
 import yaml
 
 from pathlib import Path
-
-from eodal.core.sensors import Sentinel2
-from eodal.core.sensors import Landsat
 from eodal.mapper.mapper import Mapper, MapperConfigs
 from eodal.metadata.sentinel2.parsing import parse_MTD_TL
 
@@ -57,42 +54,6 @@ def angles_from_mspc(url: str) -> dict[str, float]:
     return sensor_angle_dict
 
 
-def preprocess_landsat_scene(
-        ds: Landsat
-) -> Landsat:
-    """
-    Mask clouds and cloud shadows in a Landsat scene based
-    on the 'qa_pixel' band.
-
-    :param ds:
-        Landsat scene before cloud mask applied.
-    :return:
-        Landsat scene with clouds and cloud shadows masked.
-    """
-    ds.mask_clouds_and_shadows(inplace=True)
-    return ds
-
-
-def preprocess_sentinel2_scene(
-    ds: Sentinel2,
-    target_resolution: int = 10,
-) -> Sentinel2:
-    """
-    Resample a Sentinel-2 scene and mask clouds, shadows, and snow
-    based on the Scene Classification Layer (SCL).
-
-    :param target_resolution:
-        spatial target resolution to resample all bands to.
-    :returns:
-        resampled, cloud-masked Sentinel-2 scene.
-    """
-    # resample scene
-    ds.resample(inplace=True, target_resolution=target_resolution)
-    # mask clouds, shadows, and snow
-    ds.mask_clouds_and_shadows(inplace=True)
-    return ds
-
-
 def fetch_data(
         mapper_configs: MapperConfigs,
         output_dir: Path,
@@ -118,6 +79,10 @@ def fetch_data(
     # query the scenes available (no I/O of scenes, this only fetches metadata)
     mapper = Mapper(mapper_configs)
     mapper.query_scenes()
+
+    # if no data is found return
+    if mapper.metadata.empty:
+        return
 
     # load the angular information. Unfortunately, this is not yet
     # available in the STAC metadata, so we need to fetch it from

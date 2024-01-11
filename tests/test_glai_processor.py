@@ -1,8 +1,9 @@
 """
-Test the glai_processor package. This test suite is run using pytest.
+Low-level tests of the glai_processor package (unit test).
+This test suite is run using pytest.
 """
 
-import pytest
+import pytest  # noqa F401
 import geopandas as gpd
 import pandas as pd
 
@@ -17,21 +18,22 @@ from eodal.mapper.feature import Feature
 from eodal.mapper.mapper import MapperConfigs
 from rtm_inv.core.lookup_table import generate_lut
 
-from glai_processor.fetch_satellite_data import (
-    fetch_data,
+from glai_processor.fetch_satellite_data import fetch_data
+from glai_processor.constants import (
     preprocess_sentinel2_scene,
     preprocess_landsat_scene)
 from glai_processor.inversion import invert
 from glai_processor.utils import (
     load_angles,
-    FPATH_SRF,
-    PLATFORMS,
-    SAMPLING_METHOD,
-    RTM_PARAMS)
-
+    PLATFORMS
+)
 
 settings = get_settings()
 settings.USE_STAC = True
+
+FPATH_SRF = 'https://github.com/EOA-team/sentinel2_crop_traits/raw/main/data/auxiliary/S2-SRF_COPE-GSEG-EOPG-TN-15-0007_3.1.xlsx'  # noqa
+RTM_PARAMS = 'https://raw.githubusercontent.com/EOA-team/sentinel2_crop_trait_timeseries/main/src/lut_params/prosail_danner-etal_all_phases.csv'  # noqa
+SAMPLING_METHOD = 'frs'
 
 
 def test_sentinel2():
@@ -60,7 +62,6 @@ def test_sentinel2():
                                      'apply_scaling': False,
                                      'read_scl': True},
         'scene_modifier': preprocess_sentinel2_scene,
-        'scene_modifier_kwargs': {'target_resolution': 10}
     }
     # define the mapper configs
     mapper_configs = MapperConfigs(
