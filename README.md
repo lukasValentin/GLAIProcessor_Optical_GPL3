@@ -1,5 +1,5 @@
-![Tests](https://github.com/lukasValentin/GLAIProcessor_Optical_GPL3/actions/workflows/python-app.yml/badge.svg)
-[![codecov](https://codecov.io/gh/lukasValentin/GLAIProcessor_Optical_GPL3/graph/badge.svg?token=VFfwEUJmZT)](https://codecov.io/gh/lukasValentin/GLAIProcessor_Optical_GPL3)
+![Tests](https://github.com/terensis/GLAIProcessor_Optical_GPL3/actions/workflows/python-app.yml/badge.svg)
+[![codecov](https://codecov.io/gh/terensis/GLAIProcessor_Optical_GPL3/graph/badge.svg?token=VFfwEUJmZT)](https://codecov.io/gh/terensis/GLAIProcessor_Optical_GPL3)
 
 # Green Leaf Area Index Retrieval from Optical Data (and other traits)
 
@@ -14,7 +14,7 @@ This software is an improved version of the original source code for the paper o
 From source:
 
 ```bash
-git clone <URL>
+git clone git@github.com:terensis/GLAIProcessor_Optical_GPL3.git
 cd GLAIProcessor_Optical_GPL3
 python setup.py install
 ```
