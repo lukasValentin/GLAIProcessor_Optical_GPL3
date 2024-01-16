@@ -280,5 +280,5 @@ def monitor_folder(
             constants=constants,
             temporal_increment_days=temporal_increment_days
         )
-    else:
-        indicate_complete(output_dir_scene=folder_to_monitor)
+
+    indicate_complete(output_dir_scene=folder_to_monitor)
