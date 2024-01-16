@@ -1,6 +1,6 @@
 [run]
 branch = True
-omit = */tests/*
+omit = */test/*
 
 [report]
 exclude_lines =
