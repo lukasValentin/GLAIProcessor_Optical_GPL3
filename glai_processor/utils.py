@@ -122,5 +122,8 @@ def set_latest_scene(
     # make sure the latest scene is never in the future
     if timestamp > datetime.now():
         timestamp = datetime.now()
+    # create output directory if it does not exist
+    if not output_dir.exists():
+        output_dir.mkdir(parents=True)
     with open(output_dir.joinpath('latest_scene'), 'w+') as f:
         f.write(f'{timestamp.date()}')

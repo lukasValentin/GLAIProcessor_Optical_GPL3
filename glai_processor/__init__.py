@@ -253,6 +253,7 @@ def monitor_folder(
         )
     except Exception as e:
         logger.error(f"Error while fetching data: {e}")
+        raise ValueError(f"Error while fetching data: {e}")
 
     # perform inversion (generate lookup-tables and run the inversion)
     try:
@@ -263,6 +264,7 @@ def monitor_folder(
         )
     except Exception as e:
         logger.error(f"Error while running RTM: {e}")
+        raise ValueError(f"Error while running RTM: {e}")
 
     # update the "latest scene" timestamp
     set_latest_scene(folder_to_monitor, timestamp=time_end_internal)
