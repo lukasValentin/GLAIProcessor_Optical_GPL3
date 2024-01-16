@@ -7,9 +7,14 @@ setup(
     author='Lukas Valentin Graf',
     author_email='lukas.graf@terensis.io',
     packages=find_packages(),
+    entry_points={
+        'console_scripts': [
+            'glai_processor = glai_processor.cli:main'
+        ]
+    },
     install_requires=[
         'rio-cogeo',
-        'eodal @ git+https://github.com/EOA-team/eodal',
+        'eodal',
         'rtm_inv @ git+https://github.com/EOA-team/rtm_inv',
     ],
     classifiers=[
