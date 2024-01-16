@@ -44,7 +44,7 @@ A sample call (Linux) could look like
 ```bash
 glai_processor --output_dir /home/$USER/GLAI_Test --feature https://github.com/terensis/GLAIProcessor_Optical_GPL3/raw/main/data/bbox_wtz.gpkg --time_start 2023-10-01 --time_end 2023-10-15
 ```
-Here, a small bounding box of an agricultural area in Switzerland is queried, and Sentinel-2 data is extracted for a period of two weeks in October 2023. Subsequently, PROSAIL lookup-tables are generated for the Sentinel-2 scenes found and inversion is run to retrieve GLAI and the leaf chlorophyll a+b (cab) content.
+Here, a small bounding box of an agricultural area in Switzerland is queried, and Sentinel-2 data is extracted for a period of two weeks in October 2023. Subsequently, PROSAIL lookup-tables are generated for the Sentinel-2 scenes found and inversion is run to retrieve GLAI and the leaf chlorophyll a+b (cab) content. The output will be stored in a directory (`GLAI_Test`) in the user's home directory.
 
 ### Python
 
