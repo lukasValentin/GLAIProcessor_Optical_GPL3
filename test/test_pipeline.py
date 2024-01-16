@@ -3,12 +3,14 @@ Test of the entire GLAI processor (integration test).
 """
 
 import pytest
+import glai_processor.cli as cli
 import shutil
 
 from datetime import datetime
 from eodal.mapper.feature import Feature
 from pathlib import Path
-from shapely.geometry import box, Point
+from shapely.geometry import box
+from unittest.mock import Mock
 
 from glai_processor import monitor_folder
 
@@ -92,3 +94,32 @@ def test_s2_pipeline(generate_test_feature):
             time_start=time_start,
             time_end=time_end,
         )
+
+
+def test_cli(monkeypatch):
+    """Test the CLI"""
+
+    # Mock the command line arguments
+    arg_list = [
+        'cli.py',
+        '--output_dir', 'data/pipeline',
+        '--feature', 'data/bbox_wtz.gpkg',
+        '--time_start', '2023-06-01',
+        '--time_end', '2023-06-15',
+        '--rtm_params', 'https://raw.githubusercontent.com/EOA-team/sentinel2_crop_trait_timeseries/main/src/lut_params/prosail_danner-etal_all_phases.csv',  # noqa E501
+        '--lut_size', '1000',
+        '--n_solutions', '200',
+        '--sampling_method', 'frs',
+        '--traits', 'lai', 'cab'
+    ]
+    monkeypatch.setattr('sys.argv', arg_list)
+
+    # Mock the main function to prevent actual execution
+    mock_main = Mock()
+    monkeypatch.setattr(cli, 'main', mock_main)
+
+    # Call the main function
+    cli.main()
+
+    # Assert that the main function was called once
+    mock_main.assert_called_once()
