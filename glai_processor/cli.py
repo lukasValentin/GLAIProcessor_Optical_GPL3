@@ -50,7 +50,6 @@ def get_parser() -> argparse.ArgumentParser:
         type=str,
         help='Path to the RTM parameter file (CSV).',
         default='https://raw.githubusercontent.com/EOA-team/sentinel2_crop_trait_timeseries/main/src/lut_params/prosail_danner-etal_all_phases.csv',  # noqa E501
-        required=True
     )
     parser.add_argument(
         '--lut_size',
@@ -68,14 +67,14 @@ def get_parser() -> argparse.ArgumentParser:
         '--sampling_method',
         type=str,
         help='Sampling method for the inversion.',
-        options=['frs', 'lhs'],
+        choices=['frs', 'lhs'],
         default='frs'
     )
     parser.add_argument(
         '--traits',
         type=list[str],
         help='List of traits to retrieve.',
-        options=[
+        choices=[
             'n', 'lai', 'cab', 'car', 'cbrown',
             'cw', 'cm', 'ant', 'lidfa', 'lidfb',
             'hspot', 'rsoil', 'psoil', 'tts',
@@ -108,7 +107,9 @@ def main() -> None:
 
     # convert the arguments
     output_dir = Path(args.output_dir)
-    fpath_feature = Path(args.feature)
+    if not output_dir.exists():
+        output_dir.mkdir(parents=True)
+    fpath_feature = args.feature
     feature = Feature.from_geoseries(
         gpd.read_file(fpath_feature).dissolve().geometry
     )

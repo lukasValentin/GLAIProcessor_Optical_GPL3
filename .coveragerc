@@ -1,6 +1,6 @@
 [run]
 branch = True
-omit = */test/*
+omit = */test/*, glai_processor/cli.py
 
 [report]
 exclude_lines =
